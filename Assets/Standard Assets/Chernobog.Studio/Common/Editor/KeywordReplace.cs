@@ -10,7 +10,7 @@ namespace Chernobog.Studio.Common
 
 	public class KeywordReplace : UnityEditor.AssetModificationProcessor {
  
-		public static void OnWillCreateAsset ( string path ) {
+		/*public static void OnWillCreateAsset ( string path ) {
 			path = path.Replace( ".meta", "" );
 			var index = path.LastIndexOf( "." );
 			var file = path.Substring( index );
@@ -26,6 +26,8 @@ namespace Chernobog.Studio.Common
 
 			System.IO.File.WriteAllText( path, file );
 			AssetDatabase.Refresh();
+			
 		}
+		*/
 	}
 }
