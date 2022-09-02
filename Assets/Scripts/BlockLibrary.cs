@@ -29,7 +29,7 @@ namespace Voxhull
             public override int GetHashCode() => HashCode.Combine(name, description, blockid);
         }
 
-        public List<Block> Blocks => blocks;
+        public List<Block> blockList => blocks;
         private List<Block> blocks = new();
         
         private void Start()

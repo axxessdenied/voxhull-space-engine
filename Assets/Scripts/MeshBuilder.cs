@@ -4,6 +4,9 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Burst;
 using UnityEngine.Rendering;
+using System.Runtime.InteropServices;
+using System;
+using UnityEngine.ProBuilder;
 
 // web* src = https://gist.github.com/andrew-raphael-lukasik/cbf9d0097c3b4da67b5e0ecb3715e219
 namespace Voxhull
@@ -138,6 +141,7 @@ namespace Voxhull
             
             var vertJob = new VertJob
             {
+                Dimensions = chunkDimensions,
                 Entries = _relevantVoxelData,
                 Vertices = _vertices,
                 TemplateVertices0 = _templateVertices0,
@@ -150,6 +154,7 @@ namespace Voxhull
             
             var normJob = new NormalsJob
             {
+                Dimensions = chunkDimensions,
                 Entries = _relevantVoxelData,
                 Normals = _normals,
                 TemplateNormals0 = _templateNormals0,
@@ -162,6 +167,7 @@ namespace Voxhull
             
             var uvJob = new UVJob
             {
+                Dimensions = chunkDimensions,
                 Entries = _relevantVoxelData,
                 UV = _uv,
                 TemplateUVs0 = _templateUVs0,
@@ -174,6 +180,7 @@ namespace Voxhull
             
             var indicesJob = new IndicesJob
             {
+                Dimensions = chunkDimensions,
                 Entries = _relevantVoxelData,
                 Indices = _indices,
                 TemplateIndices0 = _templateIndices0,
@@ -282,8 +289,9 @@ namespace Voxhull
         }
 #endif
         /*
-         * create a bitmask where air = true
+         * builds bitmasks for each cell of air
          */
+
         [BurstCompile]
         public struct VoxelsToBitmasksJob : IJobParallelFor
         {
@@ -322,6 +330,7 @@ namespace Voxhull
         public struct IndicesJob : IJob
         {
             [WriteOnly] public NativeList<int> Indices;
+            [ReadOnly] public int3 Dimensions;
             [ReadOnly] public NativeList<VoxelsToBitmasksJob.Entry> Entries;
             [ReadOnly] public NativeArray<int> TemplateIndices0, TemplateIndices1, TemplateIndices2, TemplateIndices3, TemplateIndices4, TemplateIndices5;
             [ReadOnly] public int TemplateVertices0Length, TemplateVertices1Length, TemplateVertices2Length, TemplateVertices3Length, TemplateVertices4Length, TemplateVertices5Length;
@@ -331,7 +340,11 @@ namespace Voxhull
                 foreach (var next in Entries.AsArray())
                 {
                     var bitmask = next.Bitmask;
+                    var cellCoords = next.Coords;
+                    Debug.Log($"Bitmask coords value: {next.Coords}, data: {bitmask}");
+
                     for (byte direction = 0; direction < 6; direction++)
+                    {
                         if ((bitmask & 1 << direction) == 1 << direction)// the same as Voxels[neighbourIndex]!=0, but read from bitmask, so it's faster and you can test many directions at once
                             switch (direction)
                             {
@@ -342,6 +355,9 @@ namespace Voxhull
                                 case 4: foreach (var index in TemplateIndices4) Indices.Add(baseIndex + index); baseIndex += TemplateVertices4Length; break;// z-
                                 case 5: foreach (var index in TemplateIndices5) Indices.Add(baseIndex + index); baseIndex += TemplateVertices5Length; break;// z+
                             }
+                    }
+                    //check if we are on an edge where faces don't get drawn
+
                 }
             }
         }
@@ -350,6 +366,7 @@ namespace Voxhull
         public struct VertJob : IJob
         {
             [WriteOnly] public NativeList<Vector3> Vertices;
+            [ReadOnly] public int3 Dimensions;
             [ReadOnly] public NativeList<VoxelsToBitmasksJob.Entry> Entries;
             [ReadOnly] public NativeArray<Vector3> TemplateVertices0, TemplateVertices1, TemplateVertices2, TemplateVertices3, TemplateVertices4, TemplateVertices5;
             void IJob.Execute()
@@ -359,7 +376,9 @@ namespace Voxhull
                     var cellCoords = next.Coords;
                     var bitmask = next.Bitmask;
                     var cellCenter = cellCoords + new float3 { x = 0.5f, y = 0.5f, z = 0.5f };
+
                     for (byte direction = 0; direction < 6; direction++)
+                    {
                         if ((bitmask & 1 << direction) == 1 << direction)// the same as Voxels[neighbourIndex]!=0, but read from bitmask, so it's faster and you can test many directions at once
                             switch (direction)
                             {
@@ -370,6 +389,7 @@ namespace Voxhull
                                 case 4: foreach (var vert in TemplateVertices4) Vertices.Add(cellCenter + (float3)vert); break;// z-
                                 case 5: foreach (var vert in TemplateVertices5) Vertices.Add(cellCenter + (float3)vert); break;// z+
                             }
+                    }
                 }
             }
         }
@@ -378,6 +398,7 @@ namespace Voxhull
         public struct NormalsJob : IJob
         {
             [WriteOnly] public NativeList<Vector3> Normals;
+            [ReadOnly] public int3 Dimensions;
             [ReadOnly] public NativeList<VoxelsToBitmasksJob.Entry> Entries;
             [ReadOnly] public NativeArray<Vector3> TemplateNormals0, TemplateNormals1, TemplateNormals2, TemplateNormals3, TemplateNormals4, TemplateNormals5;
             void IJob.Execute()
@@ -385,7 +406,10 @@ namespace Voxhull
                 foreach (var next in Entries.AsArray())
                 {
                     var bitmask = next.Bitmask;
+                    var cellCoords = next.Coords;
+
                     for (byte direction = 0; direction < 6; direction++)
+                    { 
                         if ((bitmask & 1 << direction) == 1 << direction)// the same as Voxels[neighbourIndex]!=0, but read from bitmask, so it's faster and you can test many directions at once
                             switch (direction)
                             {
@@ -396,6 +420,7 @@ namespace Voxhull
                                 case 4: Normals.AddRange(TemplateNormals4); break;// z-
                                 case 5: Normals.AddRange(TemplateNormals5); break;// z+
                             }
+                    }
                 }
             }
         }
@@ -404,6 +429,7 @@ namespace Voxhull
         public struct UVJob : IJob
         {
             [WriteOnly] public NativeList<Vector2> UV;
+            [ReadOnly] public int3 Dimensions;
             [ReadOnly] public NativeList<VoxelsToBitmasksJob.Entry> Entries;
             [ReadOnly] public NativeArray<Vector2> TemplateUVs0, TemplateUVs1, TemplateUVs2, TemplateUVs3, TemplateUVs4, TemplateUVs5;
             void IJob.Execute()
@@ -411,7 +437,10 @@ namespace Voxhull
                 foreach (var next in Entries.AsArray())
                 {
                     var bitmask = next.Bitmask;
+                    var cellCoords = next.Coords;
+
                     for (byte direction = 0; direction < 6; direction++)
+                    { 
                         if ((bitmask & 1 << direction) == 1 << direction)// the same as Voxels[neighbourIndex]!=0, but read from bitmask, so it's faster and you can test many directions at once
                             switch (direction)
                             {
@@ -422,6 +451,7 @@ namespace Voxhull
                                 case 4: UV.AddRange(TemplateUVs4); break;// z-
                                 case 5: UV.AddRange(TemplateUVs5); break;// z+
                             }
+                    }
 
                 }
             }
@@ -430,6 +460,7 @@ namespace Voxhull
         public void AddVoxel(int x, int y, int z, byte type)
         {
             Dependency.Complete();
+            Debug.Log($"Adding voxel at  {Utilities.CoordsToIndex(x, y, z, chunkDimensions)} with a block type of {type}");
             _voxels[Utilities.CoordsToIndex(x, y, z, chunkDimensions)] = type;
             _voxelsChanged = true;
         }

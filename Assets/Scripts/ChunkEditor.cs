@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using UnityEngine.Serialization;
@@ -11,18 +9,16 @@ namespace Voxhull
     {
         [SerializeField] private GameObject selectionVoxel;
         [SerializeField] private BoxCollider selectionVoxelCollider;
-        [SerializeField] private GameObject chunkToEditGo;
         [SerializeField] private Chunk chunkToEdit;
         [SerializeField] private MeshBuilder meshConstructor;
         [SerializeField] private BoxCollider chunkToEditCollider;
-        [SerializeField] private int layer = 0;
-        [SerializeField] private float gridsize = 1f;
+        [SerializeField] private BlockLibrary blockLibrary;
+        
+        [SerializeField] private int layer = 1;
+        [SerializeField] private float gridSize = 1f;
+        [SerializeField] private byte brushType;
 
-        public MeshBuilder MeshConstructor
-        {
-            get => meshConstructor;
-            private set => meshConstructor = value;
-        }
+        public MeshBuilder MeshConstructor => meshConstructor;
 
         public bool selectionVoxelActive => selectionVoxel.activeInHierarchy;
         public Vector3 selectionVoxelPosition => selectionVoxel.transform.position;
@@ -32,14 +28,14 @@ namespace Voxhull
         private void Update()
         {
             if (!_firstUpdate || chunkToEdit == null) return;
-            layer = chunkToEdit.ChunkDimensions.z - 1;
+            layer = chunkToEdit.chunkDimensions.z - 2;
             _firstUpdate = false;
         }
 
         public void MoveSelectionVoxel(Vector3 position)
         {
-            selectionVoxel.transform.localScale = new Vector3(1, 1, 1) * gridsize;
-            var halfGridSize = gridsize * 0.5f;
+            selectionVoxel.transform.localScale = new Vector3(1, 1, 1) * gridSize;
+            var halfGridSize = gridSize * 0.5f;
             position.x = math.ceil(position.x) + halfGridSize;
             position.y = math.ceil(position.y) + halfGridSize;
             position.z += halfGridSize;
@@ -53,12 +49,12 @@ namespace Voxhull
 
         public void IncreaseLayer()
         {
-            if (layer < chunkToEdit.ChunkDimensions.z - 1) layer++;
+            if (layer < chunkToEdit.chunkDimensions.z - 2) layer++;
         }
 
         public void DecreaseLayer()
         {
-            if (layer > 0) layer--;
+            if (layer > 1) layer--;
         }
 
         public void SetSelectionVoxel(GameObject go)
@@ -82,14 +78,32 @@ namespace Voxhull
             chunkToEdit = chunk;
         }
 
-        public void SetChunkToEditGo(GameObject go)
+        public void SetBoundsCollider(BoxCollider newCollider)
         {
-            chunkToEditGo = go;
+            chunkToEditCollider = newCollider;
         }
 
-        public void SetBoundsCollider(BoxCollider collider)
+        public void SetBlockLibrary(BlockLibrary newBlockLibrary)
         {
-            chunkToEditCollider = collider;
+            brushType = 0;
+            blockLibrary = newBlockLibrary;
+        }
+
+        public void SetBrushType(byte newBrush)
+        {
+            brushType = newBrush;
+        }
+
+        public byte BrushType => brushType;
+
+        public void IncreaseBrushType()
+        {
+            if (blockLibrary.blockList.Count - 1 > brushType) brushType++;
+        }
+
+        public void DecreaseBrushType()
+        {
+            if (brushType > 0) brushType--;
         }
     }
 

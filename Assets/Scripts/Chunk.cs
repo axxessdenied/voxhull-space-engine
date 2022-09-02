@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
 using Unity.Mathematics;
 
 namespace Voxhull
@@ -17,22 +14,15 @@ namespace Voxhull
      */
     public class Chunk : MonoBehaviour
     {
-        public int width = 30;  //x
-        public int depth = 30;  //z
-        public int height = 5;  //y
+        public int width = Global.defaultChunkDimensions.x;
+        public int depth = Global.defaultChunkDimensions.y;
+        public int height = Global.defaultChunkDimensions.z;
 
-        public int3 ChunkDimensions;
-
-        /* 
-         * converts 3D call to 1D array
-         *  
-         */
+        public int3 chunkDimensions;
         
-       
-
         private void Awake()
         {
-            ChunkDimensions = new int3(width, depth, height);
+            chunkDimensions = new int3(width, depth, height);
 
         }
     }

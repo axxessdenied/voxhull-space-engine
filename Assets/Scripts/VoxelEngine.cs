@@ -1,12 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
-using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using Unity.Mathematics;
-using UnityEngine.Serialization;
 
 namespace Voxhull
 {
@@ -35,22 +31,16 @@ namespace Voxhull
         [SerializeField] private Material tempMat;
         [SerializeField] private CinemachineVirtualCamera playerCamera;
         [SerializeField] private CinemachineCameraOffset offset;
-        public ChunkEditor shipBuilder;
-        public BlockLibrary blockLibraryMain;
-        public EngineMode Mode { get; private set; } = EngineMode.Passive;
+        [SerializeField] private FileHandler fileHandler;
+        [SerializeField] private PlayerData playerData;
+        [SerializeField] private ChunkEditor shipBuilder;
+        [SerializeField] private BlockLibrary blockLibrary;
+        private EngineMode Mode = EngineMode.Passive;
 
         private World _world = new();
         private ushort _count;
 
         private bool _firstUpdate = true;
-
-
-        // Start is called before the first frame update
-        private void Start()
-        {
-            
-        }
-
         
         
         // Update is called once per frame
@@ -58,38 +48,7 @@ namespace Voxhull
         {
             if (_firstUpdate)
             {
-                //generate a chunk to store our voxels and register some stuff
-                var chkGo = new GameObject($"Chunk {_count}")
-                {
-                    transform =
-                    {
-                        parent = transform.parent
-                    }
-                };
-                var chunk = chkGo.AddComponent<Chunk>();
-                var boxCollider = chkGo.AddComponent<BoxCollider>();
-                var meshRenderer = chkGo.AddComponent<MeshRenderer>();
-                chkGo.AddComponent<MeshFilter>();
-                var meshBuilder = chkGo.AddComponent<MeshBuilder>();
-                meshBuilder.Construction(chunk.ChunkDimensions, template);
-                var size = chunk.ChunkDimensions;
-                boxCollider.isTrigger = true;
-                boxCollider.size = new Vector3(size.x, size.y, size.z);
-                boxCollider.center = new Vector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f);
-
-                _world.Chunks.Add(_count++, chunk);
-                meshRenderer.material = tempMat;
-
-                shipBuilder.SetChunkToEditGo(chunk.gameObject);
-                shipBuilder.SetChunkToEdit(chunk);
-                shipBuilder.SetBoundsCollider(boxCollider);
-                shipBuilder.SetMeshConstructor(meshBuilder);
-                shipBuilder.SetSelectionVoxel(selectionVoxel);
-                
-                playerCamera.Follow = chunk.transform;
-                offset.m_Offset = new Vector3(size.x * 0.5f, size.y * 0.5f, -size.x);
-                
-                _firstUpdate = false;
+                FirstUpdate();
             }
 
             //using new InputSystem
@@ -120,6 +79,44 @@ namespace Voxhull
    
         }
 
+        private void FirstUpdate()
+        {
+            //generate a chunk to store our voxels and register some stuff
+            var chkGo = new GameObject($"Chunk {_count}")
+            {
+                transform =
+                    {
+                        parent = transform.parent
+                    }
+            };
+            var chunk = chkGo.AddComponent<Chunk>();
+            var boxCollider = chkGo.AddComponent<BoxCollider>();
+            var meshRenderer = chkGo.AddComponent<MeshRenderer>();
+            chkGo.AddComponent<MeshFilter>();
+            var meshBuilder = chkGo.AddComponent<MeshBuilder>();
+            meshBuilder.Construction(chunk.chunkDimensions, template);
+            var size = chunk.chunkDimensions;
+            boxCollider.isTrigger = true;
+            boxCollider.size = new Vector3(size.x - Global.chunkBuffer, size.y - Global.chunkBuffer, size.z - 2);
+            boxCollider.center = new Vector3(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f);
+
+            _world.Chunks.Add(_count++, chunk);
+            meshRenderer.material = tempMat;
+
+            shipBuilder.SetChunkToEdit(chunk);
+            shipBuilder.SetBoundsCollider(boxCollider);
+            shipBuilder.SetMeshConstructor(meshBuilder);
+            shipBuilder.SetSelectionVoxel(selectionVoxel);
+            shipBuilder.SetBlockLibrary(blockLibrary);
+
+            playerCamera.Follow = chunk.transform;
+            offset.m_Offset = new Vector3(size.x * 0.5f, size.y * 0.5f, -size.x);
+
+            _firstUpdate = false;
+        }
+
+        /*-------------INPUT PROCESSING---------------------------*/
+
         public void CameraLook(InputAction.CallbackContext context)
         {
             //Debug.Log("move camera");
@@ -141,8 +138,8 @@ namespace Voxhull
                         var x = (int)position.x;
                         var y = (int)position.y;
                         var z = (int)position.z;
-                        
-                        shipBuilder.MeshConstructor.AddVoxel(x, y, z, 1);
+
+                        shipBuilder.MeshConstructor.AddVoxel(x, y, z, shipBuilder.BrushType) ;
                     }
                     break;
                 /*-------------------------*/
@@ -194,6 +191,15 @@ namespace Voxhull
             else if (context.ReadValue<float>() < 0)
                 shipBuilder.IncreaseLayer();
                 
+        }
+
+        public void BrushTypeSelector(InputAction.CallbackContext context)
+        {
+            if (!context.started) return;
+            if (context.ReadValue<float>() > 0)
+                shipBuilder.IncreaseBrushType();
+            else if (context.ReadValue<float>() < 0)
+                shipBuilder.DecreaseBrushType();
         }
 
     }
