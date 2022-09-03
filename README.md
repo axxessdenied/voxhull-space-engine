@@ -18,8 +18,8 @@ Some games I love and will inspire the direction of this project.
   
 # Tools being used
 
-[PlasticSCM](https://www.plasticscm.com/) with [GitSync](https://www.plasticscm.com/documentation/gitsync/plastic-scm-version-control-gitsync-guide) : for easy branching inside Unity
-[ParrelSync](https://github.com/VeriorPies/ParrelSync) : for easy multiplayer testing without builds
+* [PlasticSCM](https://www.plasticscm.com/) with [GitSync](https://www.plasticscm.com/documentation/gitsync/plastic-scm-version-control-gitsync-guide) : for easy branching inside Unity
+* [ParrelSync](https://github.com/VeriorPies/ParrelSync) : for easy multiplayer testing without builds
 
 Unity 2021.3.9f1
 Additional Packages:
