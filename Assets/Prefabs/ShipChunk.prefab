@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 2775307378205334532}
   - component: {fileID: 1128260681212437358}
   - component: {fileID: 2734897202727744770}
+  - component: {fileID: 2171960813306862052}
   - component: {fileID: 4987674621431853631}
   - component: {fileID: 9011915428908232084}
+  - component: {fileID: 1123180464757015294}
   m_Layer: 0
   m_Name: ShipChunk
   m_TagString: Untagged
@@ -28,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9000691311967045193}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -30.234474, y: 14.659691, z: 36.038475}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -85,6 +87,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2171960813306862052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000691311967045193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b68bf2be111c6584fa2ac9f2eb00fd37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boxCollider: {fileID: 1123180464757015294}
+  id: 0
+  width: 5
+  depth: 8
+  height: 5
+  chunkDimensions:
+    x: 0
+    y: 0
+    z: 0
 --- !u!114 &4987674621431853631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,12 +125,12 @@ MonoBehaviour:
     y: 0
     z: 0
   template:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5038415079639038121, guid: d88949e6671ee054395e7134fb56a154, type: 3}
+  - {fileID: 3829710092134197820, guid: d88949e6671ee054395e7134fb56a154, type: 3}
+  - {fileID: -7297778806202060819, guid: d88949e6671ee054395e7134fb56a154, type: 3}
+  - {fileID: 7897802880088958521, guid: d88949e6671ee054395e7134fb56a154, type: 3}
+  - {fileID: 6745783838257947797, guid: d88949e6671ee054395e7134fb56a154, type: 3}
+  - {fileID: 7515983779440266617, guid: d88949e6671ee054395e7134fb56a154, type: 3}
 --- !u!114 &9011915428908232084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,3 +147,16 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!65 &1123180464757015294
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9000691311967045193}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

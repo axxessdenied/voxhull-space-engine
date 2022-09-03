@@ -10,6 +10,7 @@ namespace Voxhull
         [SerializeField] private GameObject selectionVoxel;
         [SerializeField] private BoxCollider selectionVoxelCollider;
         [SerializeField] private Chunk chunkToEdit;
+        [SerializeField] private Transform chunkToEditTransform;
         [SerializeField] private MeshBuilder meshConstructor;
         [SerializeField] private BoxCollider chunkToEditCollider;
         [SerializeField] private BlockLibrary blockLibrary;
@@ -19,6 +20,7 @@ namespace Voxhull
         [SerializeField] private byte brushType;
 
         public MeshBuilder MeshConstructor => meshConstructor;
+        public Vector3 ChunkPosition => chunkToEditTransform.position;
 
         public bool selectionVoxelActive => selectionVoxel.activeInHierarchy;
         public Vector3 selectionVoxelPosition => selectionVoxel.transform.position;
@@ -76,6 +78,7 @@ namespace Voxhull
         public void SetChunkToEdit(Chunk chunk)
         {
             chunkToEdit = chunk;
+            chunkToEditTransform = chunk.transform;
         }
 
         public void SetBoundsCollider(BoxCollider newCollider)

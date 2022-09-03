@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8064250961909936951}
   - component: {fileID: 8064250961909936948}
-  - component: {fileID: 7814544409910735231}
   - component: {fileID: 8064250961909936949}
+  - component: {fileID: 52290307}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -51,16 +51,26 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 8064250961909936949}
-    PlayerPrefab: {fileID: 0}
+    PlayerPrefab: {fileID: 5636202813448514533, guid: 9f39cd8780c9b6f45aeec989c18f75e8, type: 3}
     NetworkPrefabs:
     - Override: 0
       Prefab: {fileID: 9000691311967045193, guid: 9a4b322ac32aeaf49af70733a1522c08, type: 3}
       SourcePrefabToOverride: {fileID: 0}
       SourceHashToOverride: 0
       OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 5636202813448514533, guid: 9f39cd8780c9b6f45aeec989c18f75e8, type: 3}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
+    - Override: 0
+      Prefab: {fileID: 0}
+      SourcePrefabToOverride: {fileID: 0}
+      SourceHashToOverride: 0
+      OverridingTargetPrefab: {fileID: 0}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
-    ConnectionApproval: 0
+    ConnectionApproval: 1
     ConnectionData: 
     EnableTimeResync: 0
     TimeResyncInterval: 30
@@ -73,20 +83,6 @@ MonoBehaviour:
     LoadSceneTimeOut: 120
     SpawnTimeout: 1
     EnableNetworkLogs: 1
---- !u!114 &7814544409910735231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8064250961909936938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b031abe7c5c50c459678693407aeb1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DrawOffset: {x: 10, y: 10}
-  LabelColor: {r: 0, g: 0, b: 0, a: 1}
 --- !u!114 &8064250961909936949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,9 +105,23 @@ MonoBehaviour:
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
     Address: 127.0.0.1
-    Port: 7777
+    Port: 6969
     ServerListenAddress: 
   DebugSimulator:
     PacketDelayMS: 0
     PacketJitterMS: 0
     PacketDropRate: 0
+--- !u!114 &52290307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8064250961909936938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b031abe7c5c50c459678693407aeb1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DrawOffset: {x: 10, y: 10}
+  LabelColor: {r: 0, g: 0, b: 0, a: 1}

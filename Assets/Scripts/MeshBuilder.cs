@@ -4,20 +4,18 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Burst;
 using UnityEngine.Rendering;
-using System.Runtime.InteropServices;
-using System;
-using UnityEngine.ProBuilder;
+using Unity.Netcode;
 
 // web* src = https://gist.github.com/andrew-raphael-lukasik/cbf9d0097c3b4da67b5e0ecb3715e219
 namespace Voxhull
 {
 
 
-    public class MeshBuilder : MonoBehaviour
+    public class MeshBuilder : NetworkBehaviour
     {
         [SerializeField] private int3 chunkDimensions;
         [SerializeField] private Mesh[] template = new Mesh[6];
-        public JobHandle Dependency = default(JobHandle);
+        public JobHandle Dependency = default;
 
         private NativeArray<byte> _voxels;
         //stores data for each face of a voxel
@@ -55,7 +53,7 @@ namespace Voxhull
                 Allocator.Persistent);
         }
 
-        private void OnDestroy()
+        public override void OnDestroy()
         {
             Dependency.Complete();
 
@@ -264,7 +262,7 @@ namespace Voxhull
                 foreach (var point in positions)
                     Gizmos.DrawCube(point, cellSize);
             }
-            Gizmos.color = Color.yellow;
+            Gizmos.color = Color.cyan;
             Gizmos.DrawWireCube((float3)chunkDimensions * 0.5f, chunkDimensions * cellSize);
         }
 
@@ -406,7 +404,6 @@ namespace Voxhull
                 foreach (var next in Entries.AsArray())
                 {
                     var bitmask = next.Bitmask;
-                    var cellCoords = next.Coords;
 
                     for (byte direction = 0; direction < 6; direction++)
                     { 
@@ -437,7 +434,6 @@ namespace Voxhull
                 foreach (var next in Entries.AsArray())
                 {
                     var bitmask = next.Bitmask;
-                    var cellCoords = next.Coords;
 
                     for (byte direction = 0; direction < 6; direction++)
                     { 
