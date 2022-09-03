@@ -107,6 +107,7 @@ MonoBehaviour:
   fileHandler: {fileID: 1161893181815320507}
   shipBuilder: {fileID: 0}
   blockLibrary: {fileID: 133351207}
+  prefab: {fileID: 9000691311967045193, guid: 9a4b322ac32aeaf49af70733a1522c08, type: 3}
 --- !u!114 &133351207
 MonoBehaviour:
   m_ObjectHideFlags: 0

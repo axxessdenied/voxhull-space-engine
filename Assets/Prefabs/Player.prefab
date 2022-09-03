@@ -72,6 +72,86 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5636202813448514528}
     m_Modifications:
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[15].m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[15].m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6119429585616332188}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6119429585616332188}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[13].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6119429585616332188}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6119429585616332188}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[15].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6119429585616332188}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[16].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6119429585616332188}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6119429585616332188}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[18].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 6119429585616332188}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[15].m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CameraLook
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: FireButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[13].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PassiveMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[14].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: EngineeringMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[15].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CommandMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[16].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LogisticsMode
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[17].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Zoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[18].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: BrushTypeSelector
+      objectReference: {fileID: 0}
+    - target: {fileID: 5596494709650099885, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+      propertyPath: m_ActionEvents.Array.data[15].m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: Voxhull.VoxelEngine, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 6375970304741033804, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -130,6 +210,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+--- !u!114 &6119429585616332188 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6375970304741033805, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}
+  m_PrefabInstance: {fileID: 907312583473242833}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6119429585616332190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c19db0de8593c341be30a369c14cf0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6119429585616332189 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6375970304741033804, guid: e56d3a48585325b41ae5b3464105bfa6, type: 3}

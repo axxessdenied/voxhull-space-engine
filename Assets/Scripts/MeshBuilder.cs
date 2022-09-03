@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using Unity.Burst;
 using UnityEngine.Rendering;
 using Unity.Netcode;
+using System.Linq;
 
 // web* src = https://gist.github.com/andrew-raphael-lukasik/cbf9d0097c3b4da67b5e0ecb3715e219
 namespace Voxhull
@@ -38,12 +39,15 @@ namespace Voxhull
             _mesh = new Mesh();
             _mesh.MarkDynamic();
             GetComponent<MeshFilter>().sharedMesh = _mesh;
-            
-            _indices = new NativeList<int>(Allocator.Persistent);
-            _vertices = new NativeList<Vector3>(Allocator.Persistent);
-            _normals = new NativeList<Vector3>(Allocator.Persistent);
-            _uv = new NativeList<Vector2>(Allocator.Persistent);
-            _relevantVoxelData = new NativeList<VoxelsToBitmasksJob.Entry>(Allocator.Persistent);
+
+            if (IsServer)
+            { 
+                _indices = new NativeList<int>(Allocator.Persistent);
+                _vertices = new NativeList<Vector3>(Allocator.Persistent);
+                _normals = new NativeList<Vector3>(Allocator.Persistent);
+                _uv = new NativeList<Vector2>(Allocator.Persistent);
+                _relevantVoxelData = new NativeList<VoxelsToBitmasksJob.Entry>(Allocator.Persistent);
+            }
 
         }
 
@@ -54,6 +58,11 @@ namespace Voxhull
         }
 
         public override void OnDestroy()
+        {
+            Destroy();
+        }
+
+        private void Destroy()
         {
             Dependency.Complete();
 
@@ -102,21 +111,40 @@ namespace Voxhull
             Destroy(_mesh);
         }
         
+        private void UpdateMesh(Vector3[] vertices, Vector3[] normals, Vector2[] uvs, int[] indices)
+        {
+            _mesh.Clear();
+            _mesh.SetVertices(vertices);
+            _mesh.SetNormals(normals);
+            _mesh.SetUVs(0, uvs);
+            _mesh.indexFormat = _indices.Length > ushort.MaxValue ? IndexFormat.UInt32 : IndexFormat.UInt16;
+            _mesh.SetIndices(indices, MeshTopology.Triangles, 0);
+        }   
 
         private void Update()
         {
             Dependency.Complete();
+            if(IsServer)
+            {
+                RunJobs();
+            }
+        }
+
+        [ClientRpc]
+        public void SendMeshToClientRpc(Vector3[] vertices, Vector3[] normals, Vector2[] uvs, int[] indices)
+        {
+            
+            UpdateMesh(vertices, normals, uvs, indices);
+        }
+
+        private void RunJobs()
+        {
+            
             if (_jobScheduled)
             {
                 Debug.Log($"new mesh data // indices:{_indices.Length}, vertices:{_vertices.Length}, normals:{_normals.Length}, uv:{_uv.Length} ");
 
-                _mesh.Clear();
-                _mesh.SetVertices(_vertices.AsArray());
-                _mesh.SetNormals(_normals.AsArray());
-                _mesh.SetUVs(0, _uv.AsArray());
-                _mesh.indexFormat = _indices.Length > ushort.MaxValue ? IndexFormat.UInt32 : IndexFormat.UInt16;
-                _mesh.SetIndices(_indices.AsArray(), MeshTopology.Triangles, 0);
-
+                SendMeshToClientRpc(_vertices.ToArray(), _normals.ToArray(), _uv.ToArray(), _indices.ToArray());
                 _jobScheduled = false;
             }
 
@@ -127,7 +155,7 @@ namespace Voxhull
             _uv.Clear();
             _relevantVoxelData.Clear();
             var maxCellCount = chunkDimensions.x * chunkDimensions.y * chunkDimensions.z;
-            
+
             _relevantVoxelData.Capacity = maxCellCount;
 
             var voxelsToBitmasksJob = new VoxelsToBitmasksJob
@@ -136,7 +164,7 @@ namespace Voxhull
                 Voxels = _voxels,
                 Results = _relevantVoxelData.AsParallelWriter()
             };
-            
+
             var vertJob = new VertJob
             {
                 Dimensions = chunkDimensions,
@@ -149,7 +177,7 @@ namespace Voxhull
                 TemplateVertices4 = _templateVertices4,
                 TemplateVertices5 = _templateVertices5,
             };
-            
+
             var normJob = new NormalsJob
             {
                 Dimensions = chunkDimensions,
@@ -162,7 +190,7 @@ namespace Voxhull
                 TemplateNormals4 = _templateNormals4,
                 TemplateNormals5 = _templateNormals5,
             };
-            
+
             var uvJob = new UVJob
             {
                 Dimensions = chunkDimensions,
@@ -175,7 +203,7 @@ namespace Voxhull
                 TemplateUVs4 = _templateUVs4,
                 TemplateUVs5 = _templateUVs5,
             };
-            
+
             var indicesJob = new IndicesJob
             {
                 Dimensions = chunkDimensions,

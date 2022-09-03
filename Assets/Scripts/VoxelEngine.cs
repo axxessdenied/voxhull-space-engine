@@ -3,6 +3,8 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
 using Unity.Mathematics;
+using Unity.Netcode;
+using UnityEditor.PackageManager;
 
 namespace Voxhull
 {
@@ -11,11 +13,9 @@ namespace Voxhull
      * 
      * Helps manage our voxels
      * 
-     * Unity planes have been redefined in this project
-     * Y and Z have been swapped for cinemachine compatibility
     */
 
-    public class VoxelEngine : MonoBehaviour
+    public class VoxelEngine : NetworkBehaviour
     {
         public enum EngineMode
         {
@@ -35,6 +35,7 @@ namespace Voxhull
         //[SerializeField] private PlayerData playerData;
         [SerializeField] private ChunkEditor shipBuilder;
         [SerializeField] private BlockLibrary blockLibrary;
+        [SerializeField] private GameObject prefab;
         private EngineMode Mode = EngineMode.Passive;
 
         private World _world = new();
@@ -42,13 +43,61 @@ namespace Voxhull
 
         private bool _firstUpdate = true;
 
+        public override void OnNetworkSpawn()
+        {
+            //init();
+        }
+
         private void Start()
         {
-            playerCamera ??= EasyRef.Instance.PlayerCamera;
-            offset ??= EasyRef.Instance.CameraOffset;
+            init();
         }
-        
-        
+
+        private void init()
+        {
+            mainCamera = mainCamera != null ? mainCamera : Camera.main;
+            playerCamera = playerCamera != null ? playerCamera : EasyRef.Instance.PlayerCamera;
+            offset = offset != null ? offset : EasyRef.Instance.CameraOffset;
+
+            RequestSpawnServerRpc();
+        }
+
+        private void SpawnShipChunk()
+        {
+            var go = Instantiate(prefab).GetComponent<NetworkObject>();
+           
+            go.Spawn();
+            UpdateShipBuilderClientRpc(go);
+        }
+
+        [ServerRpc]
+        private void RequestSpawnServerRpc()
+        {
+            SpawnShipChunk();
+        }
+
+        [ClientRpc]
+        private void UpdateShipBuilderClientRpc(NetworkObjectReference no)
+        {
+            no.TryGet(out var go);
+            
+            Debug.Log("UpdateShipBuilder go name is : " + go.name);
+            
+            var chunk = go.GetComponent<Chunk>();
+            shipBuilder.SetChunkToEdit(chunk);
+            shipBuilder.SetBoundsCollider(go.GetComponent<BoxCollider>());
+            var mb = go.GetComponent<MeshBuilder>();
+            var size = chunk.chunkDimensions;
+            mb.SetChunkDimensions(size);
+            shipBuilder.SetMeshConstructor(mb);
+            shipBuilder.SetSelectionVoxel(selectionVoxel);
+            shipBuilder.SetBlockLibrary(blockLibrary);
+            
+            playerCamera.Follow = go.transform;
+            offset.m_Offset = new Vector3(size.x / 2, size.y / 2, -math.max(size.x, size.y));
+        }
+
+
         // Update is called once per frame
         private void Update()
         {
@@ -68,6 +117,7 @@ namespace Voxhull
                     break;
                 /*-------------------------*/
                 case EngineMode.Engineering:
+                    if (selectionVoxel == null) return;
                     shipBuilder.MoveSelectionVoxel(new Vector3(mouseWorldPos.x, mouseWorldPos.y, shipBuilder.Layer));
                     
                     shipBuilder.SelectionVoxelActive(shipBuilder.isSelectorOnShip());

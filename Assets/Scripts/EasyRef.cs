@@ -9,5 +9,6 @@ namespace Voxhull
         [SerializeField] private CinemachineCameraOffset cameraOffset;
         public CinemachineVirtualCamera PlayerCamera => playerCamera;
         public CinemachineCameraOffset CameraOffset => cameraOffset;
+        public Camera MainCamera => Camera.main;
     }
 }
