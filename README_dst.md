@@ -1,2 +1,0 @@
-# Voxhull
- Another Voxel Engine.
