@@ -61,10 +61,10 @@ sysinfo.txt
 crashlytics-build.properties
 
 #standard asset folders
-Standard Assets/MilkyWay/
-Standard Assets/Music/
-Standard Assets/Sci-Fi Music/
-Standard Assets/SkyBox Volume 2/
-Standard Assets/Space SFX - 102218
-Standard Assets/StandardGalacticAlphabet/
-Standard Assets/Universe Sounds Free Pack/
+Assets/Standard Assets/MilkyWay/
+Assets/Standard Assets/Music/
+Assets/Standard Assets/Sci-Fi Music/
+Assets/Standard Assets/SkyBox Volume 2/
+Assets/Standard Assets/Space SFX - 102218
+Assets/Standard Assets/StandardGalacticAlphabet/
+Assets/Standard Assets/Universe Sounds Free Pack/
