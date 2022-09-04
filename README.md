@@ -12,7 +12,8 @@ Gamepad support exists but it's far from being complete. At some point I'll get 
 * Y | Gamepad.North Button : Engineering Mode
 * U | Gamepad.South Button : Logistics Mode
 * I | Gamepad.East Button:  Logistics Mode
-* [ ] : Scroll through different voxel types to paint (hull, floor, scaffolding, etc)
+* [ : Scroll through different voxel types to paint (hull, floor, scaffolding, etc)
+* ] : Scroll through different voxel types to paint (hull, floor, scaffolding, etc)
 * Mouse scroll / - = : Move build selector up and down layers.
 * F5 : Quicksave, just for testing right now
 * F9 : Quickload, just for testing right now
