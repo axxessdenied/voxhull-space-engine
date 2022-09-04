@@ -1,6 +1,21 @@
 # Voxhull
  Another Voxel Engine.
  A multiplayer game where you will build voxel space ships to run an empire.
+ 
+ **make sure to check releases for test builds!**
+ 
+ # Control Reference
+
+Gamepad support exists but it's far from being complete. At some point I'll get to that.
+ 
+* T | Gamepad.West Button : Passive Mode
+* Y | Gamepad.North Button : Engineering Mode
+* U | Gamepad.South Button : Logistics Mode
+* I | Gamepad.East Button:  Logistics Mode
+* [ ] : Scroll through different voxel types to paint (hull, floor, scaffolding, etc)
+* Mouse scroll / - = : Move build selector up and down layers.
+* F5 : Quicksave, just for testing right now
+* F9 : Quickload, just for testing right now
 
  # Inspiration
 
